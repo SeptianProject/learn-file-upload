@@ -11,7 +11,7 @@ class UpdatePublicFotoRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class UpdatePublicFotoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'string',
+            'path' => 'image|mimes:png,jpg'
         ];
     }
 }

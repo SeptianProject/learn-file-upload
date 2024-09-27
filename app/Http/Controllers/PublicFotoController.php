@@ -13,7 +13,9 @@ class PublicFotoController extends Controller
      */
     public function index()
     {
-        //
+        return response()->view('public-foto.index', [
+            'public_fotos' => PublicFoto::all(),
+        ]);
     }
 
     /**
@@ -21,7 +23,7 @@ class PublicFotoController extends Controller
      */
     public function create()
     {
-        //
+        return response()->view('public-foto.create');
     }
 
     /**
@@ -29,7 +31,16 @@ class PublicFotoController extends Controller
      */
     public function store(StorePublicFotoRequest $request)
     {
-        //
+        // upload file
+        $request->file('foto')->store('/');
+        // create new public foto
+        PublicFoto::create([
+            'name' => $request->name,
+            'path' => $request->file('foto')->hashName(),
+        ]);
+
+
+        return response()->redirectTo(route('public-foto.index'));
     }
 
     /**
@@ -37,7 +48,7 @@ class PublicFotoController extends Controller
      */
     public function show(PublicFoto $publicFoto)
     {
-        //
+        return response()->view('public-foto.show', compact('publicFoto'));
     }
 
     /**
@@ -45,7 +56,7 @@ class PublicFotoController extends Controller
      */
     public function edit(PublicFoto $publicFoto)
     {
-        //
+        return response()->view('public-foto.edit', compact('publicFoto'));
     }
 
     /**
@@ -53,7 +64,21 @@ class PublicFotoController extends Controller
      */
     public function update(UpdatePublicFotoRequest $request, PublicFoto $publicFoto)
     {
-        //
+        if ($request->file('foto')) {
+            $request->file('foto')->store('/');
+
+            $publicFoto->update([
+                'name' => $request->name,
+                'path' => $request->file('foto')->hashName()
+            ]);
+        } else {
+            $publicFoto->update([
+                'name' => $request->name,
+                'path' => 'default.jpg'
+            ]);
+        }
+
+        return response()->redirectTo(route('public-foto.index'));
     }
 
     /**
@@ -61,6 +86,6 @@ class PublicFotoController extends Controller
      */
     public function destroy(PublicFoto $publicFoto)
     {
-        //
+        dd('page destroy');
     }
 }

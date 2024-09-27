@@ -17,7 +17,8 @@ class PublicFotoFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->name(),
+            'path' => 'default.jpg',
         ];
     }
 }
